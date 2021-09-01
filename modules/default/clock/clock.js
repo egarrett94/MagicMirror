@@ -28,8 +28,8 @@ Module.register("clock", {
 		secondsColor: "#888888",
 		timezone: null,
 
-		showSunTimes: false,
-		showMoonTimes: false,
+		showSunTimes: true,
+		showMoonTimes: true,
 		lat: 47.630539,
 		lon: -122.344147
 	},
@@ -46,8 +46,41 @@ Module.register("clock", {
 		Log.info("Starting module: " + this.name);
 
 		// Schedule update interval.
+		this.hour = moment().hour();
 		this.second = moment().second();
 		this.minute = moment().minute();
+
+		// Check to see if it's an angel number
+		const angelNumberCheck = (hour, minute) => {
+			let checks = [];
+			const minutes = minute.toString().split("");
+			let _hour = hour;
+
+			if (hour > 11) {
+				_hour = hour - 12;
+			}
+
+			if (hour === 0) {
+				_hour = 12;
+			}
+
+			if ((_hour === 11 && minute === 11) || (_hour === 10 && minute === 10)) {
+				this.sendNotification("ANGEL_NUMBER", _hour.toString());
+				return;
+			}
+
+			if (minutes.length > 1) {
+				minutes.forEach((val) => {
+					if (_hour === parseInt(val)) {
+						checks.push("match");
+					}
+				});
+			}
+
+			console.log({ _hr: _hour, hour, min: minute, hype: checks.length === 2 });
+
+			checks.length === 2 ? this.sendNotification("ANGEL_NUMBER", _hour.toString()) : this.sendNotification("NO_ANGEL_NUMBER", null);
+		};
 
 		// Calculate how many ms should pass until next update depending on if seconds is displayed or not
 		const delayCalculator = (reducedSeconds) => {
@@ -67,8 +100,10 @@ Module.register("clock", {
 			// If seconds is displayed CLOCK_SECOND-notification should be sent (but not when CLOCK_MINUTE-notification is sent)
 			if (this.config.displaySeconds) {
 				this.second = moment().second();
+
 				if (this.second !== 0) {
 					this.sendNotification("CLOCK_SECOND", this.second);
+					angelNumberCheck(this.hour, this.minute);
 					setTimeout(notificationTimer, delayCalculator(0));
 					return;
 				}

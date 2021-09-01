@@ -5,6 +5,7 @@
   padding-left: 0;
   padding-right: 10px;
   font-size: var(--font-size-small);
+  color: var(--color-barbie);
 }
 
 .calendar .symbol span {

@@ -49,6 +49,10 @@
   border-radius: 3px 0 0 3px;
 }
 
+.date {
+  color: #d8d86d;
+}
+
 .clockSecond {
   width: 0;
   height: 0;
@@ -69,4 +73,9 @@
 .module.clock .sun > *,
 .module.clock .moon > * {
   flex: 1;
+}
+
+.module.clock .sun .fa,
+.module.clock .moon .fa {
+  color: var(--color-lightbarbie);
 }

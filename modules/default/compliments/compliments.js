@@ -7,15 +7,16 @@
 Module.register("compliments", {
 	// Module config defaults.
 	defaults: {
-		compliments: {
-			anytime: ["Hey there sexy!"],
-			morning: ["Good morning, handsome!", "Enjoy your day!", "How was your sleep?"],
-			afternoon: ["Hello, beauty!", "You look sexy!", "Looking good today!"],
-			evening: ["Wow, you look hot!", "You look nice!", "Hi, sexy!"],
-			"....-01-01": ["Happy new year!"]
+		angelNumberMessages: {
+			1: ["Make a wish!"],
+			2: ["Make changes for the better.", "Be aware of your spiritual self.", "You're on the right path.", "Make a wish!"],
+			3: ["Take action on your dreams!", "Prepare for a spiritual experience.", "Make a wish!"],
+			4: ["A big change is coming.", "You have a divine power!", "Make a wish!"],
+			5: ["Be kind to yourself.", "Be with community.", "Make a wish!"],
+			10: ["Make a wish!"],
+			11: ["Someone is watching over you.", "Make a wish!"]
 		},
 		updateInterval: 30000,
-		remoteFile: null,
 		fadeSpeed: 4000,
 		morningStartTime: 3,
 		morningEndTime: 12,
@@ -27,6 +28,9 @@ Module.register("compliments", {
 	lastIndexUsed: -1,
 	// Set currentweather from module
 	currentWeatherType: "",
+
+	// angel number!!
+	angelNumber: null,
 
 	// Define required scripts.
 	getScripts: function () {
@@ -85,6 +89,7 @@ Module.register("compliments", {
 	 */
 	complimentArray: function () {
 		const hour = moment().hour();
+		const minute = moment().minute();
 		const date = this.config.mockDate ? this.config.mockDate : moment().format("YYYY-MM-DD");
 		let compliments;
 
@@ -110,6 +115,14 @@ Module.register("compliments", {
 			if (new RegExp(entry).test(date)) {
 				compliments.push.apply(compliments, this.config.compliments[entry]);
 			}
+		}
+
+		if (hour === 4 && minute === 20) {
+			compliments = ["Blaze it!!!"];
+		}
+
+		if (this.angelNumber !== null) {
+			compliments = this.config.angelNumberMessages[this.angelNumber];
 		}
 
 		return compliments;
@@ -160,7 +173,7 @@ Module.register("compliments", {
 	// Override dom generator.
 	getDom: function () {
 		const wrapper = document.createElement("div");
-		wrapper.className = this.config.classes ? this.config.classes : "thin xlarge bright pre-line";
+		wrapper.className = this.config.classes ? this.config.classes : "thin xlarge bright pre-line barbie";
 		// get the compliment text
 		const complimentText = this.randomCompliment();
 		// split it into parts on newline text
@@ -186,10 +199,22 @@ Module.register("compliments", {
 		this.currentWeatherType = type;
 	},
 
+	setAngelNumber: function (val) {
+		this.angelNumber = val;
+	},
+
 	// Override notification handler.
 	notificationReceived: function (notification, payload, sender) {
 		if (notification === "CURRENTWEATHER_TYPE") {
 			this.setCurrentWeatherType(payload.type);
+		}
+
+		if (notification === "ANGEL_NUMBER") {
+			this.setAngelNumber(payload);
+		}
+
+		if (notification === "NO_ANGEL_NUMBER") {
+			this.setAngelNumber(null);
 		}
 	}
 });

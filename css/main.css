@@ -1,11 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+
 :root {
   --color-text: #999;
   --color-text-dimmed: #666;
   --color-text-bright: #fff;
   --color-background: #000;
+  --color-barbie: #e0218a;
+  --color-lightbarbie: #ffc8e4;
 
   --font-primary: "Roboto Condensed";
   --font-secondary: "Roboto";
+  --font-barbie: "Lobster", cursive;
 
   --font-size: 20px;
   --font-size-small: 0.75rem;
@@ -82,7 +87,13 @@ body {
 .xlarge {
   font-size: 3.75rem;
   line-height: 1;
-  letter-spacing: -3px;
+  letter-spacing: 0.01em;
+}
+
+.xlarge.barbie {
+  font-family: var(--font-barbie);
+  color: var(--color-lightbarbie);
+  -webkit-text-stroke: 2px var(--color-barbie);
 }
 
 .thin {
